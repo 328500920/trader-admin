@@ -1,0 +1,46 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: trader-admin
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: xxxx
+    username: xxxx
+    password: xxxx
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.trader.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT配置
+jwt:
+  secret: trader-growth-secret-key-2024
+  expiration: 86400000
+  header: Authorization
+  prefix: Bearer
+
+# 文件上传配置
+file:
+  upload-path: ./uploads/
+  allowed-types: jpg,jpeg,png,gif,webp
+  max-size: 10485760

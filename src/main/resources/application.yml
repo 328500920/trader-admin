@@ -8,9 +8,9 @@ spring:
     name: trader-admin
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://110.40.171.244:33306/trader_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: trader
-    password: 2020@Trader
+    url: jdbc:mysql://xxx.xxx.xxx.xxx:xxx/trader_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: xxx
+    password: xxx
   servlet:
     multipart:
       max-file-size: 10MB

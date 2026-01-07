@@ -3,9 +3,9 @@ package com.trader.controller;
 import com.trader.common.PageResult;
 import com.trader.common.Result;
 import com.trader.entity.LearnCase;
+import com.trader.security.RequireRole;
 import com.trader.service.LearnCaseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -83,13 +83,13 @@ public class LearnCaseController {
         return Result.success(stats);
     }
     
-    // ============ 管理员接口 ============
+    // ============ 管理员和讲师接口 ============
     
     /**
      * 管理员查询案例列表
      */
     @GetMapping("/admin/list")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<PageResult<LearnCase>> listAllCases(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -104,7 +104,7 @@ public class LearnCaseController {
      * 创建案例
      */
     @PostMapping
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> createCase(@RequestBody LearnCase learnCase) {
         caseService.createCase(learnCase);
         return Result.success();
@@ -114,7 +114,7 @@ public class LearnCaseController {
      * 更新案例
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> updateCase(@PathVariable Long id, @RequestBody LearnCase learnCase) {
         learnCase.setId(id);
         caseService.updateCase(learnCase);
@@ -125,7 +125,7 @@ public class LearnCaseController {
      * 删除案例
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> deleteCase(@PathVariable Long id) {
         caseService.deleteCase(id);
         return Result.success();

@@ -3,9 +3,9 @@ package com.trader.controller;
 import com.trader.common.PageResult;
 import com.trader.common.Result;
 import com.trader.entity.LearnToolGuide;
+import com.trader.security.RequireRole;
 import com.trader.service.LearnToolGuideService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -77,10 +77,10 @@ public class LearnToolGuideController {
         return Result.success(stats);
     }
     
-    // ============ 管理员接口 ============
+    // ============ 管理员和讲师接口 ============
     
     @GetMapping("/admin/list")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<PageResult<LearnToolGuide>> listAllToolsAdmin(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -90,14 +90,14 @@ public class LearnToolGuideController {
     }
     
     @PostMapping
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> createTool(@RequestBody LearnToolGuide tool) {
         toolGuideService.createTool(tool);
         return Result.success();
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> updateTool(@PathVariable Long id, @RequestBody LearnToolGuide tool) {
         tool.setId(id);
         toolGuideService.updateTool(tool);
@@ -105,7 +105,7 @@ public class LearnToolGuideController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> deleteTool(@PathVariable Long id) {
         toolGuideService.deleteTool(id);
         return Result.success();

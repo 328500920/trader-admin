@@ -3,9 +3,9 @@ package com.trader.controller;
 import com.trader.common.PageResult;
 import com.trader.common.Result;
 import com.trader.entity.LearnResource;
+import com.trader.security.RequireRole;
 import com.trader.service.LearnResourceService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -88,13 +88,13 @@ public class LearnResourceController {
         return Result.success(stats);
     }
     
-    // ============ 管理员接口 ============
+    // ============ 管理员和讲师接口 ============
     
     /**
      * 管理员查询资源列表
      */
     @GetMapping("/admin/list")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<PageResult<LearnResource>> listAllResources(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -110,7 +110,7 @@ public class LearnResourceController {
      * 创建资源
      */
     @PostMapping
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> createResource(@RequestBody LearnResource resource) {
         resourceService.createResource(resource);
         return Result.success();
@@ -120,7 +120,7 @@ public class LearnResourceController {
      * 更新资源
      */
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> updateResource(@PathVariable Long id, @RequestBody LearnResource resource) {
         resource.setId(id);
         resourceService.updateResource(resource);
@@ -131,7 +131,7 @@ public class LearnResourceController {
      * 删除资源
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> deleteResource(@PathVariable Long id) {
         resourceService.deleteResource(id);
         return Result.success();

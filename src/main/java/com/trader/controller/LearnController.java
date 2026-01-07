@@ -1,11 +1,13 @@
 package com.trader.controller;
 
+import com.trader.annotation.OperationLog;
+import com.trader.annotation.OperationLog.OperationType;
 import com.trader.common.PageResult;
 import com.trader.common.Result;
 import com.trader.entity.*;
+import com.trader.security.RequireRole;
 import com.trader.service.LearnService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,16 @@ public class LearnController {
         return Result.success(learnService.listNotes(pageNum, pageSize));
     }
 
+    @GetMapping("/note/get")
+    public Result<LearnNote> getNoteByChapter(@RequestParam Long chapterId) {
+        return Result.success(learnService.getNoteByChapter(chapterId));
+    }
+
+    @PostMapping("/note/save")
+    public Result<LearnNote> saveNote(@RequestBody LearnNote note) {
+        return Result.success(learnService.saveNote(note));
+    }
+
     @PostMapping("/note")
     public Result<Void> createNote(@RequestBody LearnNote note) {
         learnService.createNote(note);
@@ -74,16 +86,18 @@ public class LearnController {
         return Result.success();
     }
 
-    // 管理员接口
+    // 管理员和讲师接口
     @PostMapping("/course")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.CREATE, description = "创建课程")
     public Result<Void> createCourse(@RequestBody LearnCourse course) {
         learnService.createCourse(course);
         return Result.success();
     }
 
     @PutMapping("/course/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.UPDATE, description = "修改课程")
     public Result<Void> updateCourse(@PathVariable Long id, @RequestBody LearnCourse course) {
         course.setId(id);
         learnService.updateCourse(course);
@@ -91,21 +105,24 @@ public class LearnController {
     }
 
     @DeleteMapping("/course/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.DELETE, description = "删除课程")
     public Result<Void> deleteCourse(@PathVariable Long id) {
         learnService.deleteCourse(id);
         return Result.success();
     }
 
     @PostMapping("/chapter")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.CREATE, description = "创建章节")
     public Result<Void> createChapter(@RequestBody LearnChapter chapter) {
         learnService.createChapter(chapter);
         return Result.success();
     }
 
     @PutMapping("/chapter/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.UPDATE, description = "修改章节")
     public Result<Void> updateChapter(@PathVariable Long id, @RequestBody LearnChapter chapter) {
         chapter.setId(id);
         learnService.updateChapter(chapter);
@@ -113,14 +130,15 @@ public class LearnController {
     }
 
     @DeleteMapping("/chapter/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.DELETE, description = "删除章节")
     public Result<Void> deleteChapter(@PathVariable Long id) {
         learnService.deleteChapter(id);
         return Result.success();
     }
 
     @GetMapping("/course/all")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<List<LearnCourse>> listAllCourses() {
         return Result.success(learnService.listAllCourses());
     }
@@ -142,14 +160,16 @@ public class LearnController {
     }
 
     @PostMapping("/material")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.CREATE, description = "创建学习资料")
     public Result<Void> createMaterial(@RequestBody LearnMaterial material) {
         learnService.createMaterial(material);
         return Result.success();
     }
 
     @PutMapping("/material/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.UPDATE, description = "修改学习资料")
     public Result<Void> updateMaterial(@PathVariable Long id, @RequestBody LearnMaterial material) {
         material.setId(id);
         learnService.updateMaterial(material);
@@ -157,7 +177,8 @@ public class LearnController {
     }
 
     @DeleteMapping("/material/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
+    @OperationLog(module = "课程管理", type = OperationType.DELETE, description = "删除学习资料")
     public Result<Void> deleteMaterial(@PathVariable Long id) {
         learnService.deleteMaterial(id);
         return Result.success();

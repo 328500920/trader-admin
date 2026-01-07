@@ -3,10 +3,10 @@ package com.trader.controller;
 import com.trader.common.PageResult;
 import com.trader.common.Result;
 import com.trader.entity.*;
+import com.trader.security.RequireRole;
 import com.trader.service.ToolService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -39,14 +39,14 @@ public class ToolController {
     }
 
     @PostMapping("/link")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole("admin")
     public Result<Void> createLink(@RequestBody ToolLink link) {
         toolService.createLink(link);
         return Result.success();
     }
 
     @PutMapping("/link/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole("admin")
     public Result<Void> updateLink(@PathVariable Long id, @RequestBody ToolLink link) {
         link.setId(id);
         toolService.updateLink(link);
@@ -54,7 +54,7 @@ public class ToolController {
     }
 
     @DeleteMapping("/link/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole("admin")
     public Result<Void> deleteLink(@PathVariable Long id) {
         toolService.deleteLink(id);
         return Result.success();

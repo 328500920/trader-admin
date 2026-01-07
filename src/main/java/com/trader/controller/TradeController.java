@@ -1,5 +1,7 @@
 package com.trader.controller;
 
+import com.trader.annotation.OperationLog;
+import com.trader.annotation.OperationLog.OperationType;
 import com.trader.common.PageResult;
 import com.trader.common.Result;
 import com.trader.entity.TradeImage;
@@ -51,12 +53,14 @@ public class TradeController {
     }
 
     @DeleteMapping("/image/{imageId}")
+    @OperationLog(module = "交易日志", type = OperationType.DELETE, description = "删除交易图片")
     public Result<Void> deleteImage(@PathVariable Long imageId) {
         tradeService.deleteImage(imageId);
         return Result.success();
     }
 
     @PostMapping
+    @OperationLog(module = "交易日志", type = OperationType.CREATE, description = "创建交易记录")
     public Result<Void> create(@RequestBody TradeLog trade) {
         tradeService.create(trade);
         return Result.success();
@@ -69,6 +73,7 @@ public class TradeController {
     }
 
     @PutMapping("/{id}")
+    @OperationLog(module = "交易日志", type = OperationType.UPDATE, description = "修改交易记录")
     public Result<Void> update(@PathVariable Long id, @RequestBody TradeLog trade) {
         trade.setId(id);
         tradeService.update(trade);
@@ -76,18 +81,21 @@ public class TradeController {
     }
 
     @DeleteMapping("/{id}")
+    @OperationLog(module = "交易日志", type = OperationType.DELETE, description = "删除交易记录")
     public Result<Void> delete(@PathVariable Long id) {
         tradeService.delete(id);
         return Result.success();
     }
 
     @PutMapping("/{id}/close")
+    @OperationLog(module = "交易日志", type = OperationType.UPDATE, description = "平仓交易")
     public Result<Void> closeTrade(@PathVariable Long id, @RequestBody TradeLog closeInfo) {
         tradeService.closeTrade(id, closeInfo);
         return Result.success();
     }
 
     @PostMapping("/{id}/image")
+    @OperationLog(module = "交易日志", type = OperationType.CREATE, description = "添加交易图片")
     public Result<Void> addImage(@PathVariable Long id, @RequestBody TradeImage image) {
         tradeService.addImage(id, image);
         return Result.success();

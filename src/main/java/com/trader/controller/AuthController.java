@@ -1,5 +1,7 @@
 package com.trader.controller;
 
+import com.trader.annotation.OperationLog;
+import com.trader.annotation.OperationLog.OperationType;
 import com.trader.common.Result;
 import com.trader.entity.SysUser;
 import com.trader.service.AuthService;
@@ -14,6 +16,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
+    @OperationLog(module = "认证", type = OperationType.LOGIN, description = "用户登录")
     public Result<Map<String, Object>> login(@RequestBody Map<String, String> params) {
         String username = params.get("username");
         String password = params.get("password");
@@ -21,6 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @OperationLog(module = "认证", type = OperationType.LOGOUT, description = "用户退出")
     public Result<Void> logout() {
         return Result.success();
     }

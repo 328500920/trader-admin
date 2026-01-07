@@ -34,6 +34,9 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(1);
+        if (user.getRole() == null) {
+            user.setRole("student"); // 默认学员
+        }
         userMapper.insert(user);
     }
 
@@ -43,6 +46,16 @@ public class UserService {
             throw new BusinessException("用户不存在");
         }
         user.setPassword(null);
+        userMapper.updateById(user);
+    }
+
+    public void updateRole(Long id, String role) {
+        if (!role.equals("admin") && !role.equals("teacher") && !role.equals("student")) {
+            throw new BusinessException("无效的角色");
+        }
+        SysUser user = new SysUser();
+        user.setId(id);
+        user.setRole(role);
         userMapper.updateById(user);
     }
 
@@ -62,5 +75,9 @@ public class UserService {
         user.setId(id);
         user.setPassword(passwordEncoder.encode(newPassword));
         userMapper.updateById(user);
+    }
+
+    public SysUser getById(Long id) {
+        return userMapper.selectById(id);
     }
 }

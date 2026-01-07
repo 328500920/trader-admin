@@ -151,6 +151,36 @@ public class LearnService {
         return PageResult.of(result.getRecords(), result.getTotal(), pageNum, pageSize);
     }
 
+    public LearnNote getNoteByChapter(Long chapterId) {
+        Long userId = SecurityUtils.getUserId();
+        LambdaQueryWrapper<LearnNote> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(LearnNote::getUserId, userId)
+               .eq(LearnNote::getChapterId, chapterId)
+               .orderByDesc(LearnNote::getUpdateTime)
+               .last("LIMIT 1");
+        return noteMapper.selectOne(wrapper);
+    }
+
+    public LearnNote saveNote(LearnNote note) {
+        Long userId = SecurityUtils.getUserId();
+        // 查找是否已有该章节的笔记
+        LearnNote existing = getNoteByChapter(note.getChapterId());
+        if (existing != null) {
+            // 更新
+            existing.setContent(note.getContent());
+            if (note.getTitle() != null) {
+                existing.setTitle(note.getTitle());
+            }
+            noteMapper.updateById(existing);
+            return existing;
+        } else {
+            // 新建
+            note.setUserId(userId);
+            noteMapper.insert(note);
+            return note;
+        }
+    }
+
     public void createNote(LearnNote note) {
         note.setUserId(SecurityUtils.getUserId());
         noteMapper.insert(note);

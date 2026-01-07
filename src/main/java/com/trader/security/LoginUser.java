@@ -20,7 +20,8 @@ public class LoginUser implements UserDetails {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
-        this.roleCode = user.getRoleCode();
+        // 使用role字段（数据库实际存储的字段），而不是roleCode（非数据库字段）
+        this.roleCode = user.getRole();
         this.status = user.getStatus();
     }
 

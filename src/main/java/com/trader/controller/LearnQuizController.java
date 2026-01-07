@@ -4,9 +4,9 @@ import com.trader.common.PageResult;
 import com.trader.common.Result;
 import com.trader.entity.LearnQuiz;
 import com.trader.entity.LearnQuizRecord;
+import com.trader.security.RequireRole;
 import com.trader.service.LearnQuizService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -100,10 +100,10 @@ public class LearnQuizController {
         return Result.success(stats);
     }
     
-    // ============ 管理员接口 ============
+    // ============ 管理员和讲师接口 ============
     
     @GetMapping("/admin/list")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<PageResult<LearnQuiz>> listAllQuizzes(
             @RequestParam(defaultValue = "1") int pageNum,
             @RequestParam(defaultValue = "10") int pageSize,
@@ -116,14 +116,14 @@ public class LearnQuizController {
     }
     
     @PostMapping
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> createQuiz(@RequestBody LearnQuiz quiz) {
         quizService.createQuiz(quiz);
         return Result.success();
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> updateQuiz(@PathVariable Long id, @RequestBody LearnQuiz quiz) {
         quiz.setId(id);
         quizService.updateQuiz(quiz);
@@ -131,7 +131,7 @@ public class LearnQuizController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('admin')")
+    @RequireRole({"admin", "teacher"})
     public Result<Void> deleteQuiz(@PathVariable Long id) {
         quizService.deleteQuiz(id);
         return Result.success();

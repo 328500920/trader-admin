@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 60002
   servlet:
     context-path: /api
 
@@ -8,13 +8,13 @@ spring:
     name: trader-admin
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://xxx.xxx.xxx.xxx:xxx/trader_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: xxx
-    password: xxx
+    url: jdbc:mysql://xxx.xxx.xxx.xx:xxxx/trader_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: xxxx
+    password: xxxx
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 20MB
+      max-file-size: 1024MB
+      max-request-size: 1024MB
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
@@ -41,6 +41,19 @@ jwt:
 
 # 文件上传配置
 file:
-  upload-path: ./uploads/
+  upload-path: trader/uploads/
   allowed-types: jpg,jpeg,png,gif,webp
   max-size: 10485760
+
+# AI配额配置（每日使用次数限制，-1表示无限制）
+ai:
+  quota:
+    admin: -1
+    teacher: 100
+    student: 30
+
+# 日志配置
+logging:
+  level:
+    root: INFO
+    com.trader: DEBUG

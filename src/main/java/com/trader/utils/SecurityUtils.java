@@ -27,4 +27,9 @@ public class SecurityUtils {
         LoginUser loginUser = getLoginUser();
         return loginUser != null && "admin".equals(loginUser.getRoleCode());
     }
+
+    public static String getRole() {
+        LoginUser loginUser = getLoginUser();
+        return loginUser != null ? loginUser.getRoleCode() : "student";
+    }
 }
